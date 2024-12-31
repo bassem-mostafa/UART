@@ -1,0 +1,24 @@
+[submodule "driver/ATMEGA2560"]
+	path = driver/ATMEGA2560
+	url = https://github.com/bassem-mostafa/UART_ATMEGA2560.git
+[submodule "driver/com0com"]
+	path = driver/com0com
+	url = https://github.com/paulakg4/com0com.git
+[submodule "driver/STM32G491MET6"]
+	path = driver/STM32G491MET6
+	url = https://github.com/bassem-mostafa/UART_STM32G491MET6.git
+[submodule "driver/STM32L496VGT6P"]
+	path = driver/STM32L496VGT6P
+	url = https://github.com/bassem-mostafa/UART_STM32L496VGT6P.git
+[submodule "port/Power_Analyzer"]
+	path = port/Power_Analyzer
+	url = https://github.com/bassem-mostafa/UART_Power_Analyzer.git
+[submodule "port/Stub"]
+	path = port/Stub
+	url = https://github.com/bassem-mostafa/UART_Stub.git
+[submodule "port/Windows"]
+	path = port/Windows
+	url = https://github.com/bassem-mostafa/UART_Windows.git
+[submodule "port/Flow_Meter"]
+	path = port/Flow_Meter
+	url = https://github.com/bassem-mostafa/UART_Flow_Meter.git
