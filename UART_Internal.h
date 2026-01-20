@@ -94,6 +94,8 @@ extern "C"
     {
         UART_t UARTx;
 
+        UART_CallbackOnComplete_t OnComplete;
+
         union
         {
             UART_Instance_Context_t * Context;
@@ -104,6 +106,10 @@ extern "C"
     // #############################################################################
     // #### Public Method(s) #######################################################
     // #############################################################################
+
+    UART_Status_t UART_GetInstance( UART_t UARTx, UART_Instance_t ** Instance );
+
+    UART_Status_t UART_Instance_SetCallbackOnComplete( UART_Instance_t * Instance, UART_CallbackOnComplete_t Callback );
 
     // The following APIs MUST be provided by the port
     UART_Status_t UART_IsValid( UART_t UART );

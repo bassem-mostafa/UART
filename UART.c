@@ -132,6 +132,29 @@ static UART_Status_t UART_Context_DeInitialize( void )
     return Status;
 }
 
+UART_Status_t UART_GetInstance( UART_t UARTx, UART_Instance_t ** Instance )
+{
+    UART_Status_t Status = UART_Status_Error;
+
+    do
+    {
+        UART_Trace( "%s( UARTx=%d, Instance=%p )", __FUNCTION__, UARTx, Instance );
+
+        if ( Instance == NULL )
+        {
+            Status = UART_Status_ArgumentInvalid;
+            break;
+        }
+
+        *Instance = &UART_Context.Instance[ UARTx ];
+
+        Status = UART_Status_Success;
+    }
+    while ( 0 );
+
+    return Status;
+}
+
 // #############################################################################
 // #### Public Method(s) #######################################################
 // #############################################################################
@@ -244,6 +267,38 @@ UART_Status_t UART_DeInitialize( UART_t UARTx )
     return Status;
 }
 
+UART_Status_t UART_SetCallbackOnComplete( UART_t UARTx, UART_CallbackOnComplete_t Callback )
+{
+    UART_Status_t Status = UART_Status_Error;
+
+    do
+    {
+        UART_Trace( "%s( UARTx=%d, Callback=%p )", __FUNCTION__, UARTx, Callback );
+
+        if ( ( Status = UART_IsValid( UARTx ) ) != UART_Status_Success )
+        {
+            break;
+        }
+
+        for ( UART_t UART_x = UART_Null; UART_x < UART_Count; ++UART_x )
+        {
+            if ( UARTx != UART_All && UARTx != UART_x )
+            {
+                continue;
+            }
+
+            UART_Status_t UART_Status = UART_Status_Success;
+            if ( ( UART_Status = UART_Instance_SetCallbackOnComplete( &UART_Context.Instance[ UARTx ], Callback ) ) != UART_Status_Success )
+            {
+                Status = UART_Status;
+            }
+        }
+    }
+    while ( 0 );
+
+    return Status;
+}
+
 UART_Status_t UART_Write( UART_t UARTx, UART_Data_t * Data, UART_DataLength_t DataLength )
 {
     UART_Status_t Status = UART_Status_Error;
@@ -319,7 +374,7 @@ UART_Status_t UART_Read( UART_t UARTx, UART_Data_t * Data, UART_DataLength_t Dat
 // #### Public Variable(s) #####################################################
 // #############################################################################
 
-const char UART_VERSION[] = "0.0.0.v20260117-1502";
+const char UART_VERSION[] = "0.0.0.v20260120-0211";
 
 // #############################################################################
 // #### File Guard #############################################################

@@ -110,6 +110,16 @@ extern "C"
      */
     typedef uint32_t UART_DataLength_t;
 
+    /**
+     *  @brief UART On-Complete Callback
+     *
+     *  @param[in] UARTx   Instance
+     *  @param[in] Status Execution status
+     *
+     *  @return UART_Status_t
+     */
+    typedef UART_Status_t ( *UART_CallbackOnComplete_t )( UART_t UARTx, UART_Status_t Status );
+
     // #############################################################################
     // #### Public Method(s) #######################################################
     // #############################################################################
@@ -142,6 +152,16 @@ extern "C"
      *  @return UART_Status_t
      */
     UART_Status_t UART_DeInitialize( UART_t UARTx );
+
+    /**
+     *  @brief Set callback for on-complete of UART instance
+     *
+     *  @param[in] UARTx     Instance
+     *  @param[in] Callback On-complete callback
+     *
+     *  @return UART_Status_t
+     */
+    UART_Status_t UART_SetCallbackOnComplete( UART_t UARTx, UART_CallbackOnComplete_t Callback );
 
     /**
      *  @brief Write data to UART peripheral
