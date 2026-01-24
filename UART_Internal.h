@@ -118,6 +118,8 @@ extern "C"
     UART_Status_t UART_Instance_Cycle( UART_Instance_t * Instance );
     UART_Status_t UART_Instance_DeInitialize( UART_Instance_t * Instance );
 
+    UART_Status_t UART_Instance_IsReady( UART_Instance_t * Instance );
+
     UART_Status_t UART_Instance_Write( UART_Instance_t * Instance, UART_Data_t * Data, UART_DataLength_t DataLength );
     UART_Status_t UART_Instance_Read( UART_Instance_t * Instance, UART_Data_t * Data, UART_DataLength_t DataLength );
 

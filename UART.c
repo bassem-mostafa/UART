@@ -267,6 +267,38 @@ UART_Status_t UART_DeInitialize( UART_t UARTx )
     return Status;
 }
 
+UART_Status_t UART_IsReady( UART_t UARTx )
+{
+    UART_Status_t Status = UART_Status_Error;
+
+    do
+    {
+        UART_Trace( "%s( UARTx=%d )", __FUNCTION__, UARTx );
+
+        if ( ( Status = UART_IsValid( UARTx ) ) != UART_Status_Success )
+        {
+            break;
+        }
+
+        for ( UART_t UART_x = UART_Null; UART_x < UART_Count; ++UART_x )
+        {
+            if ( UARTx != UART_All && UARTx != UART_x )
+            {
+                continue;
+            }
+
+            UART_Status_t UART_Status = UART_Status_Success;
+            if ( ( UART_Status = UART_Instance_IsReady( &UART_Context.Instance[ UART_x ] ) ) != UART_Status_Success )
+            {
+                Status = UART_Status;
+            }
+        }
+    }
+    while ( 0 );
+
+    return Status;
+}
+
 UART_Status_t UART_SetCallbackOnComplete( UART_t UARTx, UART_CallbackOnComplete_t Callback )
 {
     UART_Status_t Status = UART_Status_Error;
@@ -374,7 +406,7 @@ UART_Status_t UART_Read( UART_t UARTx, UART_Data_t * Data, UART_DataLength_t Dat
 // #### Public Variable(s) #####################################################
 // #############################################################################
 
-const char UART_VERSION[] = "0.0.0.v20260124-1234";
+const char UART_VERSION[] = "0.0.0.v20260125-0138";
 
 // #############################################################################
 // #### File Guard #############################################################

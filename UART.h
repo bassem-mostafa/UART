@@ -154,6 +154,15 @@ extern "C"
     UART_Status_t UART_DeInitialize( UART_t UARTx );
 
     /**
+     *  @brief Check readiness of UART peripheral
+     *
+     *  @param[in] UARTx Peripheral
+     *
+     *  @return UART_Status_t
+     */
+    UART_Status_t UART_IsReady( UART_t UARTx );
+
+    /**
      *  @brief Set callback for on-complete of UART instance
      *
      *  @param[in] UARTx     Instance
