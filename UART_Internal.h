@@ -88,7 +88,7 @@ extern "C"
     // #### Public Type(s) #########################################################
     // #############################################################################
 
-    typedef struct UART_Instance_Context_t UART_Instance_Context_t;
+    typedef struct UART_InstanceContext_t UART_InstanceContext_t;
 
     typedef struct UART_Instance
     {
@@ -98,7 +98,7 @@ extern "C"
 
         union
         {
-            UART_Instance_Context_t * Context;
+            UART_InstanceContext_t * Context;
             UART_STM32L496VGT6P_Instance_t * STM32L496VGT6P;
         };
     } UART_Instance_t;
