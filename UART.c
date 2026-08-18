@@ -59,101 +59,17 @@
 // #### Private Type(s) ########################################################
 // #############################################################################
 
-typedef struct UART_Context
-{
-    UART_Instance_t Instance[ UART_Count ];
-} UART_Context_t;
-
 // #############################################################################
 // #### Private Method(s) Prototype ############################################
 // #############################################################################
-
-static UART_Status_t UART_Context_Initialize( void );
-static UART_Status_t UART_Context_Cycle( void );
-static UART_Status_t UART_Context_DeInitialize( void );
 
 // #############################################################################
 // #### Private Variable(s) ####################################################
 // #############################################################################
 
-static UART_Context_t UART_Context;
-
 // #############################################################################
 // #### Private Method(s) ######################################################
 // #############################################################################
-
-static UART_Status_t UART_Context_Initialize( void )
-{
-    UART_Status_t Status = UART_Status_Error;
-
-    do
-    {
-        UART_Trace( "%s( void )", __FUNCTION__ );
-
-        for ( UART_t UART_x = UART_Null; UART_x < UART_Count; ++UART_x )
-        {
-            UART_Context.Instance[ UART_x ].UARTx = UART_x;
-        }
-
-        Status = UART_Status_Success;
-    }
-    while ( 0 );
-
-    return Status;
-}
-
-static UART_Status_t UART_Context_Cycle( void )
-{
-    UART_Status_t Status = UART_Status_Error;
-
-    do
-    {
-        UART_Trace( "%s( void )", __FUNCTION__ );
-
-        Status = UART_Status_Success;
-    }
-    while ( 0 );
-
-    return Status;
-}
-
-static UART_Status_t UART_Context_DeInitialize( void )
-{
-    UART_Status_t Status = UART_Status_Error;
-
-    do
-    {
-        UART_Trace( "%s( void )", __FUNCTION__ );
-
-        Status = UART_Status_Success;
-    }
-    while ( 0 );
-
-    return Status;
-}
-
-UART_Status_t UART_GetInstance( UART_t UARTx, UART_Instance_t ** Instance )
-{
-    UART_Status_t Status = UART_Status_Error;
-
-    do
-    {
-        UART_Trace( "%s( UARTx=%d, Instance=%p )", __FUNCTION__, UARTx, Instance );
-
-        if ( Instance == NULL )
-        {
-            Status = UART_Status_ArgumentInvalid;
-            break;
-        }
-
-        *Instance = &UART_Context.Instance[ UARTx ];
-
-        Status = UART_Status_Success;
-    }
-    while ( 0 );
-
-    return Status;
-}
 
 // #############################################################################
 // #### Public Method(s) #######################################################
@@ -161,31 +77,18 @@ UART_Status_t UART_GetInstance( UART_t UARTx, UART_Instance_t ** Instance )
 
 UART_Status_t UART_Initialize( UART_t UARTx )
 {
-    UART_Status_t Status = UART_Status_Error;
+    UART_Status_t Status = UART_Status_Success;
+    UART_Status_t UART_Status = UART_Status_Success;
 
     do
     {
         UART_Trace( "%s( UARTx=%d )", __FUNCTION__, UARTx );
 
-        if ( ( Status = UART_IsValid( UARTx ) ) != UART_Status_Success )
+        UART_t UART_start = ( UARTx == UART_All ? UART_Null : UARTx );
+        UART_t UART_end = ( UARTx == UART_All ? UART_Count : UARTx + 1 );
+        for ( UART_t UART_x = UART_start; UART_x < UART_end; ++UART_x )
         {
-            break;
-        }
-
-        if ( ( Status = UART_Context_Initialize( ) ) != UART_Status_Success )
-        {
-            break;
-        }
-
-        for ( UART_t UART_x = UART_Null; UART_x < UART_Count; ++UART_x )
-        {
-            if ( UARTx != UART_All && UARTx != UART_x )
-            {
-                continue;
-            }
-
-            UART_Status_t UART_Status = UART_Status_Success;
-            if ( ( UART_Status = UART_Instance_Initialize( &UART_Context.Instance[ UART_x ] ) ) != UART_Status_Success )
+            if ( ( UART_Status = UART_Port_Initialize( UART_x ) ) != UART_Status_Success )
             {
                 Status = UART_Status;
             }
@@ -198,31 +101,18 @@ UART_Status_t UART_Initialize( UART_t UARTx )
 
 UART_Status_t UART_Cycle( UART_t UARTx )
 {
-    UART_Status_t Status = UART_Status_Error;
+    UART_Status_t Status = UART_Status_Success;
+    UART_Status_t UART_Status = UART_Status_Success;
 
     do
     {
         UART_Trace( "%s( UARTx=%d )", __FUNCTION__, UARTx );
 
-        if ( ( Status = UART_IsValid( UARTx ) ) != UART_Status_Success )
+        UART_t UART_start = ( UARTx == UART_All ? UART_Null : UARTx );
+        UART_t UART_end = ( UARTx == UART_All ? UART_Count : UARTx + 1 );
+        for ( UART_t UART_x = UART_start; UART_x < UART_end; ++UART_x )
         {
-            break;
-        }
-
-        if ( ( Status = UART_Context_Cycle( ) ) != UART_Status_Success )
-        {
-            break;
-        }
-
-        for ( UART_t UART_x = UART_Null; UART_x < UART_Count; ++UART_x )
-        {
-            if ( UARTx != UART_All && UARTx != UART_x )
-            {
-                continue;
-            }
-
-            UART_Status_t UART_Status = UART_Status_Success;
-            if ( ( UART_Status = UART_Instance_Cycle( &UART_Context.Instance[ UART_x ] ) ) != UART_Status_Success )
+            if ( ( UART_Status = UART_Port_Cycle( UART_x ) ) != UART_Status_Success )
             {
                 Status = UART_Status;
             }
@@ -235,32 +125,22 @@ UART_Status_t UART_Cycle( UART_t UARTx )
 
 UART_Status_t UART_DeInitialize( UART_t UARTx )
 {
-    UART_Status_t Status = UART_Status_Error;
+    UART_Status_t Status = UART_Status_Success;
+    UART_Status_t UART_Status = UART_Status_Success;
 
     do
     {
         UART_Trace( "%s( UARTx=%d )", __FUNCTION__, UARTx );
 
-        if ( ( Status = UART_IsValid( UARTx ) ) != UART_Status_Success )
+        UART_t UART_start = ( UARTx == UART_All ? UART_Null : UARTx );
+        UART_t UART_end = ( UARTx == UART_All ? UART_Count : UARTx + 1 );
+        for ( UART_t UART_x = UART_start; UART_x < UART_end; ++UART_x )
         {
-            break;
-        }
-
-        for ( UART_t UART_x = UART_Null; UART_x < UART_Count; ++UART_x )
-        {
-            if ( UARTx != UART_All && UARTx != UART_x )
-            {
-                continue;
-            }
-
-            UART_Status_t UART_Status = UART_Status_Success;
-            if ( ( UART_Status = UART_Instance_DeInitialize( &UART_Context.Instance[ UART_x ] ) ) != UART_Status_Success )
+            if ( ( UART_Status = UART_Port_DeInitialize( UART_x ) ) != UART_Status_Success )
             {
                 Status = UART_Status;
             }
         }
-
-        Status = UART_Context_DeInitialize( );
     }
     while ( 0 );
 
@@ -269,26 +149,18 @@ UART_Status_t UART_DeInitialize( UART_t UARTx )
 
 UART_Status_t UART_IsReady( UART_t UARTx )
 {
-    UART_Status_t Status = UART_Status_Error;
+    UART_Status_t Status = UART_Status_Success;
+    UART_Status_t UART_Status = UART_Status_Success;
 
     do
     {
         UART_Trace( "%s( UARTx=%d )", __FUNCTION__, UARTx );
 
-        if ( ( Status = UART_IsValid( UARTx ) ) != UART_Status_Success )
+        UART_t UART_start = ( UARTx == UART_All ? UART_Null : UARTx );
+        UART_t UART_end = ( UARTx == UART_All ? UART_Count : UARTx + 1 );
+        for ( UART_t UART_x = UART_start; UART_x < UART_end; ++UART_x )
         {
-            break;
-        }
-
-        for ( UART_t UART_x = UART_Null; UART_x < UART_Count; ++UART_x )
-        {
-            if ( UARTx != UART_All && UARTx != UART_x )
-            {
-                continue;
-            }
-
-            UART_Status_t UART_Status = UART_Status_Success;
-            if ( ( UART_Status = UART_Instance_IsReady( &UART_Context.Instance[ UART_x ] ) ) != UART_Status_Success )
+            if ( ( UART_Status = UART_Port_IsReady( UART_x ) ) != UART_Status_Success )
             {
                 Status = UART_Status;
             }
@@ -301,26 +173,18 @@ UART_Status_t UART_IsReady( UART_t UARTx )
 
 UART_Status_t UART_SetCallbackOnComplete( UART_t UARTx, UART_CallbackOnComplete_t Callback )
 {
-    UART_Status_t Status = UART_Status_Error;
+    UART_Status_t Status = UART_Status_Success;
+    UART_Status_t UART_Status = UART_Status_Success;
 
     do
     {
-        UART_Trace( "%s( UARTx=%d, Callback=%p )", __FUNCTION__, UARTx, Callback );
+        UART_Trace( "%s( UARTx=%d )", __FUNCTION__, UARTx );
 
-        if ( ( Status = UART_IsValid( UARTx ) ) != UART_Status_Success )
+        UART_t UART_start = ( UARTx == UART_All ? UART_Null : UARTx );
+        UART_t UART_end = ( UARTx == UART_All ? UART_Count : UARTx + 1 );
+        for ( UART_t UART_x = UART_start; UART_x < UART_end; ++UART_x )
         {
-            break;
-        }
-
-        for ( UART_t UART_x = UART_Null; UART_x < UART_Count; ++UART_x )
-        {
-            if ( UARTx != UART_All && UARTx != UART_x )
-            {
-                continue;
-            }
-
-            UART_Status_t UART_Status = UART_Status_Success;
-            if ( ( UART_Status = UART_Instance_SetCallbackOnComplete( &UART_Context.Instance[ UARTx ], Callback ) ) != UART_Status_Success )
+            if ( ( UART_Status = UART_Port_SetCallbackOnComplete( UART_x, Callback ) ) != UART_Status_Success )
             {
                 Status = UART_Status;
             }
@@ -333,26 +197,18 @@ UART_Status_t UART_SetCallbackOnComplete( UART_t UARTx, UART_CallbackOnComplete_
 
 UART_Status_t UART_Write( UART_t UARTx, UART_Data_t * Data, UART_DataLength_t DataLength )
 {
-    UART_Status_t Status = UART_Status_Error;
+    UART_Status_t Status = UART_Status_Success;
+    UART_Status_t UART_Status = UART_Status_Success;
 
     do
     {
-        UART_Trace( "%s( UART=%d, Data=%p, Length=%d )", __FUNCTION__, UARTx, Data, DataLength );
+        UART_Trace( "%s( UARTx=%d )", __FUNCTION__, UARTx );
 
-        if ( ( Status = UART_IsValid( UARTx ) ) != UART_Status_Success )
+        UART_t UART_start = ( UARTx == UART_All ? UART_Null : UARTx );
+        UART_t UART_end = ( UARTx == UART_All ? UART_Count : UARTx + 1 );
+        for ( UART_t UART_x = UART_start; UART_x < UART_end; ++UART_x )
         {
-            break;
-        }
-
-        for ( UART_t UART_x = UART_Null; UART_x < UART_Count; ++UART_x )
-        {
-            if ( UARTx != UART_All && UARTx != UART_x )
-            {
-                continue;
-            }
-
-            UART_Status_t UART_Status = UART_Status_Success;
-            if ( ( UART_Status = UART_Instance_Write( &UART_Context.Instance[ UART_x ], Data, DataLength ) ) != UART_Status_Success )
+            if ( ( UART_Status = UART_Port_Write( UART_x, Data, DataLength ) ) != UART_Status_Success )
             {
                 Status = UART_Status;
             }
@@ -365,16 +221,12 @@ UART_Status_t UART_Write( UART_t UARTx, UART_Data_t * Data, UART_DataLength_t Da
 
 UART_Status_t UART_Read( UART_t UARTx, UART_Data_t * Data, UART_DataLength_t DataLength )
 {
-    UART_Status_t Status = UART_Status_Error;
+    UART_Status_t Status = UART_Status_Success;
+    UART_Status_t UART_Status = UART_Status_Success;
 
     do
     {
-        UART_Trace( "%s( UART=%d, Data=%p, Length=%d )", __FUNCTION__, UARTx, Data, DataLength );
-
-        if ( ( Status = UART_IsValid( UARTx ) ) != UART_Status_Success )
-        {
-            break;
-        }
+        UART_Trace( "%s( UARTx=%d )", __FUNCTION__, UARTx );
 
         if ( UARTx == UART_All )
         {
@@ -383,15 +235,11 @@ UART_Status_t UART_Read( UART_t UARTx, UART_Data_t * Data, UART_DataLength_t Dat
             break;
         }
 
-        for ( UART_t UART_x = UART_Null; UART_x < UART_Count; ++UART_x )
+        UART_t UART_start = ( UARTx == UART_All ? UART_Null : UARTx );
+        UART_t UART_end = ( UARTx == UART_All ? UART_Count : UARTx + 1 );
+        for ( UART_t UART_x = UART_start; UART_x < UART_end; ++UART_x )
         {
-            if ( UARTx != UART_All && UARTx != UART_x )
-            {
-                continue;
-            }
-
-            UART_Status_t UART_Status = UART_Status_Success;
-            if ( ( UART_Status = UART_Instance_Read( &UART_Context.Instance[ UART_x ], Data, DataLength ) ) != UART_Status_Success )
+            if ( ( UART_Status = UART_Port_Read( UART_x, Data, DataLength ) ) != UART_Status_Success )
             {
                 Status = UART_Status;
             }
@@ -406,7 +254,7 @@ UART_Status_t UART_Read( UART_t UARTx, UART_Data_t * Data, UART_DataLength_t Dat
 // #### Public Variable(s) #####################################################
 // #############################################################################
 
-const char UART_VERSION[] = "0.0.0.v20260526-1736";
+const char UART_VERSION[] = "0.0.0.v20260818-0345";
 
 // #############################################################################
 // #### File Guard #############################################################

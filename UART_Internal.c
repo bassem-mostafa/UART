@@ -75,22 +75,6 @@
 // #### Public Method(s) #######################################################
 // #############################################################################
 
-UART_Status_t UART_Instance_SetCallbackOnComplete( UART_Instance_t * Instance, UART_CallbackOnComplete_t Callback )
-{
-    UART_Status_t Status = UART_Status_Error;
-
-    do
-    {
-        UART_Trace( "%s( Instance=%p, Callback=%p )", __FUNCTION__, Instance, Callback );
-
-        Instance->OnComplete = Callback;
-        Status = UART_Status_Success;
-    }
-    while ( 0 );
-
-    return Status;
-}
-
 // #############################################################################
 // #### Public Variable(s) #####################################################
 // #############################################################################

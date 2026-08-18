@@ -88,40 +88,40 @@ extern "C"
     // #### Public Type(s) #########################################################
     // #############################################################################
 
-    typedef struct UART_InstanceContext_t UART_InstanceContext_t;
+    typedef enum UART_Type
+    {
+        UART_Type_Unknown = 0,
+        UART_Type_Null,
+        UART_Type_STM32L496VGT6P,
+    } UART_Type_t;
 
     typedef struct UART_Instance
     {
-        UART_t UARTx;
-
-        UART_CallbackOnComplete_t OnComplete;
+        UART_Type_t Type;
 
         union
         {
-            UART_InstanceContext_t * Context;
-            UART_STM32L496VGT6P_Instance_t * STM32L496VGT6P;
+            UART_STM32L496VGT6P_t STM32L496VGT6Px;
         };
+
+        UART_CallbackOnComplete_t OnComplete;
     } UART_Instance_t;
 
     // #############################################################################
     // #### Public Method(s) #######################################################
     // #############################################################################
 
-    UART_Status_t UART_GetInstance( UART_t UARTx, UART_Instance_t ** Instance );
-
-    UART_Status_t UART_Instance_SetCallbackOnComplete( UART_Instance_t * Instance, UART_CallbackOnComplete_t Callback );
-
     // The following APIs MUST be provided by the port
-    UART_Status_t UART_IsValid( UART_t UART );
+    UART_Status_t UART_Port_Initialize( UART_t UARTx );
+    UART_Status_t UART_Port_Cycle( UART_t UARTx );
+    UART_Status_t UART_Port_DeInitialize( UART_t UARTx );
 
-    UART_Status_t UART_Instance_Initialize( UART_Instance_t * Instance );
-    UART_Status_t UART_Instance_Cycle( UART_Instance_t * Instance );
-    UART_Status_t UART_Instance_DeInitialize( UART_Instance_t * Instance );
+    UART_Status_t UART_Port_SetCallbackOnComplete( UART_t UARTx, UART_CallbackOnComplete_t Callback );
 
-    UART_Status_t UART_Instance_IsReady( UART_Instance_t * Instance );
+    UART_Status_t UART_Port_IsReady( UART_t UARTx );
 
-    UART_Status_t UART_Instance_Write( UART_Instance_t * Instance, UART_Data_t * Data, UART_DataLength_t DataLength );
-    UART_Status_t UART_Instance_Read( UART_Instance_t * Instance, UART_Data_t * Data, UART_DataLength_t DataLength );
+    UART_Status_t UART_Port_Write( UART_t UARTx, UART_Data_t * Data, UART_DataLength_t DataLength );
+    UART_Status_t UART_Port_Read( UART_t UARTx, UART_Data_t * Data, UART_DataLength_t DataLength );
 
     // #############################################################################
     // #### Public Variable(s) #####################################################
